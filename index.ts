@@ -94,17 +94,33 @@ desktopLink.querySelectorAll("a").forEach((link) =>
 updateLayout();
 // Displaying the product images like a carousel in mobile view
 // Carousel
+// Carousel setup
 const track = document.querySelector(".carousel-track") as HTMLElement;
-const slides = Array.from(track.querySelectorAll("img")) as HTMLElement[];
+const slides = Array.from(track.children) as HTMLElement[];
 const prevBtn = document.querySelector(".prev") as HTMLButtonElement;
 const nextBtn = document.querySelector(".next") as HTMLButtonElement;
+const decreaseBtn = document.querySelector(".decrease-btn") as HTMLButtonElement;
+const increaseBtn = document.querySelector(".increase-btn") as HTMLButtonElement;
+const quantityDisplay = document.querySelector(".quantity") as HTMLElement;
+const addToCartBtn = document.querySelector(".add-to-cart-btn") as HTMLButtonElement;
 
 let currentIndex = 0;
+let quantity = 0;
 
-function updateCarousel() {
-  track.style.transform = `translateX(-${currentIndex * 100}%)`;
+function setSlideWidth() {
+  const slideWidth = track.clientWidth;
+  slides.forEach((slide) => {
+    slide.style.minWidth = `${slideWidth}px`;
+  });
+  updateCarousel();
 }
 
+function updateCarousel() {
+  const slideWidth = track.clientWidth;
+  track.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+}
+
+// Carousel navigation
 nextBtn.addEventListener("click", () => {
   if (currentIndex < slides.length - 1) {
     currentIndex++;
@@ -119,10 +135,68 @@ prevBtn.addEventListener("click", () => {
   }
 });
 
-prevBtn.addEventListener("click", () => {
-  if (currentIndex > 0) {
-    currentIndex--;
-    updateCarousel();
+// Quantity buttons
+decreaseBtn.addEventListener("click", () => {
+  if (quantity > 0) {
+    quantity--;
+    quantityDisplay.textContent = quantity.toString();
   }
 });
 
+increaseBtn.addEventListener("click", () => {
+  quantity++;
+  quantityDisplay.textContent = quantity.toString();
+});
+
+// Add to cart
+// Cart count element
+const cartCount = document.querySelector(".cart-count") as HTMLElement;
+
+addToCartBtn.addEventListener("click", () => {
+  if (quantity > 0) {
+    // get current count
+    let currentCount = parseInt(cartCount.textContent || "0");
+
+    // update count
+    currentCount += quantity;
+    cartCount.textContent = currentCount.toString();
+
+    // reset quantity display
+    quantity = 0;
+    quantityDisplay.textContent = quantity.toString();
+  } else {
+    alert("Please select at least 1 item");
+  }
+});
+
+function enableThumbnailSwap() {
+  const mainImage = document.querySelector(".product-image img") as HTMLImageElement;
+  const thumbnails = document.querySelectorAll<HTMLImageElement>(".thumbnail-images img");
+
+
+  if (!mainImage || thumbnails.length === 0) return;
+
+  thumbnails.forEach((thumb) => {
+    thumb.addEventListener("click", () => {
+      // store current sources
+      const mainSrc = mainImage.src;
+      const thumbSrc = thumb.src;
+
+      // swap images
+      mainImage.src = thumbSrc.replace("-thumbnail", "");
+      thumb.src = mainSrc.includes("-thumbnail")
+        ? mainSrc
+        : mainSrc.replace(".jpg", "-thumbnail.jpg");
+
+      // update highlight
+      thumbnails.forEach((t) => t.classList.remove("active"));
+      thumb.classList.add("active");
+    });
+  });
+}
+
+
+// Init
+setSlideWidth();
+window.addEventListener("resize", setSlideWidth);
+enableThumbnailSwap();
