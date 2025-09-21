@@ -14,8 +14,7 @@ nav {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   margin-bottom: 40px;
   width: 100%;
-  position: sticky;
-  top: 0;
+  /* top: 0; */
 }
 .nav h1 {
   color: hsl(26, 100%, 55%);
@@ -62,7 +61,6 @@ nav ul li a {
 
 .profile img {
   width: 40px;
-  border: 2px solid transparent;
   border-radius: 50%;
   cursor: pointer;
 }
@@ -70,7 +68,6 @@ nav ul li a {
   border: 2px solid hsl(26, 100%, 55%);
 }
 .main-container {
-  border: 2px solid blue;
   margin-top: 20px;
   display: flex;
   justify-content: space-between;
@@ -81,7 +78,6 @@ nav ul li a {
   margin: auto;
 }
 .product-image-container {
-  border: 2px solid red;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -121,7 +117,6 @@ nav ul li a {
 }
 
 .product-details {
-  border: 2px solid green;
   display: flex;
   flex-direction: column;
   gap: 20px;
